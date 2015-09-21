@@ -136,15 +136,21 @@ module Dropbox # :nodoc:
     end
   end
 
-  # A string comparison function that is resistant to timing attacks.  If you're comparing a
-  # string you got from the outside world with a string that is supposed to be a secret, use
-  # this function to check equality.
-  def self.safe_string_equals(a, b)
-    if a.length != b.length
-      false
-    else
-      a.chars.zip(b.chars).map {|ac,bc| ac == bc}.all?
+  # A string comparison function that is resistant to timing attacks. If
+  # you're comparing a string you got from the outside world with a string that
+  # is supposed to be a secret, use this function to check equality.
+  def self.safe_string_equals(trusted, untrusted)
+    same = trusted.size == untrusted.size
+
+    trusted_chars = trusted.chars
+    # This method runs in constant time proportionate to the untrusted input.
+    untrusted.chars.each_with_index do |untrusted_c, idx|
+      unless trusted_chars[idx] == untrusted_c
+        same = false
+      end
     end
+
+    same
   end
 end
 

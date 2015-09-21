@@ -1,5 +1,5 @@
 require "test/unit"
-require "../lib/dropbox_sdk"
+require_relative "../lib/dropbox_sdk"
 require "securerandom"
 require "set"
 
